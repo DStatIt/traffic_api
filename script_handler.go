@@ -1,8 +1,10 @@
 package traffic_api
 
 import (
+	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"path/filepath"
 
@@ -18,7 +20,7 @@ var (
 
 type script struct {
 	Redirect bool
-	Url      string
+	URL      string
 }
 
 func init() {
@@ -27,41 +29,32 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
-	// tmpl, err = template.New("script.js").ParseFiles("templates/script.js")
-	// if err != nil {
-	// 	panic(err)
-	// }
 
 }
 
 func GetScript(w http.ResponseWriter, r *http.Request) (int, error) {
-	// x := traffic.Request{
-	// 	Request: r,
-	// }
-	// somethin, err != x.Decide()
 
-	// type data struct {
-	// 	Username string `json:"username"`
-	// 	Password string
-	// }
-	//
-	// r.PostForm.Get("whatever")
-	// var input data
-	//
-	// a := json.NewDecoder(r.Body).Decode(&input)
+	x := traffic.RequestInfo{
+		Request: r,
+	}
 
-	// ip, err := x.GetIP()
-	// if err != nil {
-	// 	return 500, err
-	// }
+	if err := x.BuildUser(); err != nil {
+		return 500, err
+	}
 
-	http.SetCookie(w, traffic.GenerateCookie())
+	if err := x.SaveUser(); err != nil {
+		return 500, err
+	}
+
+	log.Println(fmt.Sprintf("%+v", x.Cookie))
+
+	// http.SetCookie(w, x.Cookie)
 
 	w.Header().Set("Content-Type", "application/javascript")
 
 	if err := tmpl.Execute(w, script{
 		Redirect: false,
-		Url:      "http://google.com",
+		URL:      "http://google.com",
 	}); err != nil {
 		return 500, err
 

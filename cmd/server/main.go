@@ -13,8 +13,8 @@ type appHandler func(w http.ResponseWriter, r *http.Request) (int, error)
 func main() {
 	r := mux.NewRouter()
 	r.Handle("/script.js", appHandler(traffic_api.GetScript))
-	r.Handle("/data/", appHandler(traffic_api.Data))
-	r.Handle("/read/", appHandler(traffic_api.Read))
+	// r.Handle("/data/", appHandler(traffic_api.Data))
+	// r.Handle("/read/", appHandler(traffic_api.Read))
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
