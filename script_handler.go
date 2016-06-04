@@ -1,7 +1,6 @@
 package traffic_api
 
 import (
-	"fmt"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -46,7 +45,7 @@ func GetScript(w http.ResponseWriter, r *http.Request) (int, error) {
 		return 500, err
 	}
 
-	log.Println(fmt.Sprintf("%+v", x.Cookie))
+	log.Println("New User: ", x.IP)
 
 	// http.SetCookie(w, x.Cookie)
 
