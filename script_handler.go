@@ -18,6 +18,8 @@ var (
 )
 
 type script struct {
+	UserID   int64
+	Host     string
 	Redirect bool
 	URL      string
 }
@@ -45,13 +47,15 @@ func GetScript(w http.ResponseWriter, r *http.Request) (int, error) {
 		return 500, err
 	}
 
-	log.Println("New User: ", x.IP)
+	log.Println("New User: ", x.UserID, " with ip: ", x.IP)
 
 	// http.SetCookie(w, x.Cookie)
 
 	w.Header().Set("Content-Type", "application/javascript")
 
 	if err := tmpl.Execute(w, script{
+		Host:     x.Request.Host,
+		UserID:   x.UserID,
 		Redirect: false,
 		URL:      "http://google.com",
 	}); err != nil {
